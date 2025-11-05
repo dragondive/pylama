@@ -1,4 +1,4 @@
-""" py.test plugin for checking files with pylama. """
+""" py.test plugin for checking files with pylamax. """
 from __future__ import absolute_import
 
 import pathlib
@@ -16,22 +16,31 @@ def pytest_load_initial_conftests(early_config, *_):
     # Marks have to be registered before usage
     # to not fail with --strict command line argument
     early_config.addinivalue_line(
-        "markers", "pycodestyle: Mark test as using pylama code audit tool."
+        "markers", "pycodestyle: Mark test as using pylamax code audit tool."
     )
 
 
 def pytest_addoption(parser):
     group = parser.getgroup("general")
     group.addoption(
+        "--pylamax",
+        action="store_true",
+        help="perform some pylamax code checks on .py files",
+    )
+    group.addoption(
         "--pylama",
         action="store_true",
-        help="perform some pylama code checks on .py files",
+        help="DEPRECATED: use --pylamax. Perform pylamax code checks on .py files",
     )
+
+
+def _enabled(config):
+    return getattr(config.option, "pylamax", False) or getattr(config.option, "pylama", False)
 
 
 def pytest_sessionstart(session):
     config = session.config
-    if config.option.pylama and getattr(config, "cache", None):
+    if _enabled(config) and getattr(config, "cache", None):
         config._pylamamtimes = config.cache.get(HISTKEY, {})
 
 
@@ -43,7 +52,7 @@ def pytest_sessionfinish(session):
 
 def pytest_collect_file(path, parent):
     config = parent.config
-    if config.option.pylama and path.ext == ".py":
+    if _enabled(config) and path.ext == ".py":
         return PylamaFile.from_parent(parent, path=pathlib.Path(path))
     return None
 

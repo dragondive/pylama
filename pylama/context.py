@@ -8,7 +8,7 @@ from copy import copy
 from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile, mkdtemp
-from typing import Dict, List, Set
+from typing import Dict, List, Optional, Set
 
 from pylama.errors import Error
 from pylama.utils import read
@@ -40,7 +40,9 @@ class RunContext:  # pylint: disable=R0902
         "_lines",
     )
 
-    def __init__(self, filename: str, source: str = None, options: Namespace = None):
+    def __init__(
+        self, filename: str, source: Optional[str] = None, options: Optional[Namespace] = None
+    ):
         """Initialize the class."""
         self.errors: List[Error] = []
         self.options = options

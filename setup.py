@@ -14,7 +14,8 @@ setup(
         'mccabe>=0.7.0',
         'pycodestyle>=2.9.1',
         'pydocstyle>=6.1.1',
-        'pyflakes>=2.5.0'
+        'pyflakes>=2.5.0',
+        'importlib-metadata>=3.6; python_version<"3.8"'
     ],
     extras_require=dict(
         tests=[
