@@ -64,7 +64,7 @@ def parse_linters(linters: str) -> List[str]:
     return [name for name in split_csp_str(linters) if name in LINTERS]
 
 
-def get_default_config_file(rootdir: Path = None) -> Optional[str]:
+def get_default_config_file(rootdir: Optional[Path] = None) -> Optional[str]:
     """Search for configuration file."""
     if rootdir is None:
         return DEFAULT_CONFIG_FILE
@@ -185,7 +185,7 @@ def setup_parser() -> ArgumentParser:
 
 
 def parse_options(  # noqa
-    args: List[str] = None, config: bool = True, rootdir: Path = CURDIR, **overrides
+    args: Optional[List[str]] = None, config: bool = True, rootdir: Path = CURDIR, **overrides
 ) -> Namespace:
     """Parse options from command line and configuration files."""
     # Parse args from command string
@@ -260,7 +260,9 @@ def process_value(actions: Dict, name: str, value: Any) -> Any:
     return value
 
 
-def get_config(user_path: str = None, rootdir: Path = None) -> inirama.Namespace:
+def get_config(
+    user_path: Optional[str] = None, rootdir: Optional[Path] = None
+) -> inirama.Namespace:
     """Load configuration from files."""
     cfg_path = user_path or get_default_config_file(rootdir)
     if not cfg_path and HOMECFG.exists():

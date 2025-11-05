@@ -1,13 +1,29 @@
 """Custom module loader."""
 from __future__ import annotations
 
+import sys
 from argparse import ArgumentParser
-from importlib import import_module
 from pathlib import Path
 from pkgutil import walk_packages
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type
 
-from pkg_resources import iter_entry_points
+# Import from importlib - handle both stdlib and backport
+from importlib import import_module
+
+try:
+    from importlib.metadata import entry_points  # type: ignore[attr-defined]
+except ImportError:
+    from importlib_metadata import entry_points  # type: ignore[import-not-found,no-redef]
+
+# Python 3.9 compatibility: entry_points() API changed in 3.10
+if sys.version_info >= (3, 10):
+    def get_entry_points(group):
+        """Get entry points for a group (Python 3.10+ API)."""
+        return entry_points(group=group)
+else:
+    def get_entry_points(group):
+        """Get entry points for a group (Python 3.8-3.9 API)."""
+        return entry_points().get(group, [])
 
 LINTERS: Dict[str, Type[LinterV2]] = {}
 
@@ -58,7 +74,7 @@ for _, pname, _ in walk_packages([str(Path(__file__).parent)]):  # type: ignore
         pass
 
 # Import installed linters
-for entry in iter_entry_points("pylama.linter"):
+for entry in get_entry_points("pylama.linter"):
     if entry.name not in LINTERS:
         try:
             LINTERS[entry.name] = entry.load()

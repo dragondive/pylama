@@ -19,6 +19,14 @@
     :target: https://pypi.org/project/pylama/
     :alt: Python Versions
 
+.. pull-quote:: **NOTE**
+
+    Pylamax is a fork of ken/pylama. Pylama has been unmaintained since Aug 2022.
+    I created this fork to make it compatible with Python 3.12, as well as to self-learn how to do
+    this kind of thing. :smile:
+    The credit for building and maintaining this tool belongs to the original author
+    and other contributors. If the pylama project gets reactivated, I will gladly remove this fork.
+
 .. _description:
 
 Code audit tool for Python. Pylama wraps these tools:

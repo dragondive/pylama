@@ -3,7 +3,7 @@
 import logging
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from pylama.config import Namespace
 from pylama.errors import Error
@@ -28,7 +28,10 @@ def worker(params):
 
 
 def check_async(
-    paths: List[str], code: str = None, options: Namespace = None, rootdir: Path = None
+    paths: List[str],
+    code: Optional[str] = None,
+    options: Optional[Namespace] = None,
+    rootdir: Optional[Path] = None,
 ) -> List[Error]:
     """Check given paths asynchronously."""
     with ProcessPoolExecutor(CPU_COUNT) as pool:

@@ -4,7 +4,7 @@ Prepare params, check a modeline and run the checkers.
 """
 import os.path as op
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from pylama.config import CURDIR, LOGGER, Namespace
 from pylama.context import RunContext
@@ -13,7 +13,10 @@ from pylama.lint import LINTERS, LinterV2
 
 
 def run(
-    path: str, code: str = None, rootdir: Path = CURDIR, options: Namespace = None
+    path: str,
+    code: Optional[str] = None,
+    rootdir: Path = CURDIR,
+    options: Optional[Namespace] = None,
 ) -> List[Error]:
     """Run code checkers with the given params.
 

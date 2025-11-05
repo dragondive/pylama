@@ -30,10 +30,17 @@ class Linter(Abstract):
         if options and options.pydocstyle_convention:
             params.setdefault("convention", options.pydocstyle_convention)
         convention_codes = conventions.get(params.get("convention"))
+
+        # Fix: pydocstyle expects property_decorators to be dict/set, not bool
+        property_decorators = params.get("property_decorators")
+        if property_decorators is False or property_decorators is None:
+            property_decorators = {}
+
         for err in PyDocChecker().check_source(
             ctx.source,
             ctx.filename,
             params.get("ignore_decorators"),
+            property_decorators,
             params.get("ignore_inline_noqa", False),
         ):
             if convention_codes is None or err.code in convention_codes:
